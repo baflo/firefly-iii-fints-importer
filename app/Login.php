@@ -44,10 +44,10 @@ function Login()
             // Payload mit der Session-ID
             $payload = [
                 'session_id'            => $sessionId,
-                'challenge'             => $tanChallengeData->challenge;
-                'device'                => $tanChallengeData->device;
-                'challenge_image_src'   => $tanChallengeData->challenge_image_src;
-                'is_decoupled_tan_mode' => $tanChallengeData->is_decoupled_tan_mode;
+                'challenge'             => $tanChallengeData->challenge,
+                'device'                => $tanChallengeData->device,
+                'challenge_image_src'   => $tanChallengeData->challenge_image_src,
+                'is_decoupled_tan_mode' => $tanChallengeData->is_decoupled_tan_mode,
             ];
             
             $response = $client->request('POST', 'webhookUrl', [
