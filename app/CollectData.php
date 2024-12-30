@@ -46,7 +46,8 @@ function CollectData()
         $session->set('bank_code',               $configuration->bank_code);
         $session->set('bank_2fa',                $configuration->bank_2fa);
         if($configuration->bank_2fa_device) {
-            $session->set('bank_2fa_device',         $configuration->bank_2fa_device);
+            $session->set('bank_2fa_device',                $configuration->bank_2fa_device);
+            $session->set('bank_2fa_notification_webhook',  $configuration->bank_2fa_notification_webhook);
         }
         $session->set('firefly_url',             $configuration->firefly_url);
         $session->set('firefly_access_token',    $configuration->firefly_access_token);

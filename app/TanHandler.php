@@ -9,6 +9,13 @@ use Fhp\FinTs;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Twig\Environment;
 
+class TanChallengeData {
+    public $challenge;
+    public $device;
+    public $challenge_image_src;
+    public $is_decoupled_tan_mode;
+}
+
 class TanHandler
 {
     public function __construct(
@@ -82,6 +89,34 @@ class TanHandler
             )
         );
         $this->session->set($this->action_id, serialize($this->action));
+    }
+
+    public function pose_and_render_tan_challenge_automated(): TanChallengeData
+    {
+        assert($this->needs_tan());
+        $tanRequest = $this->action->getTanRequest();
+        if ($tanRequest->getChallengeHhdUc()) {
+            try {
+                $challengeImage    = new \Fhp\Model\TanRequestChallengeImage(
+                    $tanRequest->getChallengeHhdUc()
+                );
+                $challengeImageSrc =
+                    'data:' . htmlspecialchars($challengeImage->getMimeType()) .
+                    ';base64,' . base64_encode($challengeImage->getData());
+            } catch (\RuntimeException $e) {
+                $challengeImageSrc = null;
+            }
+        }else{
+            $challengeImageSrc = null;
+        }
+
+        $tanChallengeData = new TanChallengeData();
+        $tanChallengeData->challenge = $tanRequest->getChallenge();
+        $tanChallengeData->device = $tanRequest->getTanMediumName();
+        $tanChallengeData->challenge_image_src = $challengeImageSrc;
+        $tanChallengeData->is_decoupled_tan_mode = $this->fin_ts->getSelectedTanMode()->isDecoupled();
+        
+        return $tanChallengeData;
     }
 
     public function get_finished_action(): BaseAction

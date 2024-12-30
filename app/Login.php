@@ -4,6 +4,7 @@ namespace App\StepFunction;
 use App\FinTsFactory;
 use App\Step;
 use App\TanHandler;
+use App\TanChallengeData;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -31,7 +32,37 @@ function Login()
     );
 
     if ($login_handler->needs_tan()) {
-        $login_handler->pose_and_render_tan_challenge();
+        if ($automate_without_js && $session->has("bank_2fa_notification_webhook")) {
+            $tanChallengeData = $login_handler->pose_and_render_tan_challenge_automated();
+
+            $client = HttpClient::create();// Session-ID aus dem Request extrahieren
+            $sessionId = $request->getSession()->getId();
+    
+            // Webhook-URL des Partners
+            $webhookUrl = $session->get("bank_2fa_notification_webhook");
+    
+            // Payload mit der Session-ID
+            $payload = [
+                'session_id'            => $sessionId,
+                'challenge'             => $tanChallengeData->challenge;
+                'device'                => $tanChallengeData->device;
+                'challenge_image_src'   => $tanChallengeData->challenge_image_src;
+                'is_decoupled_tan_mode' => $tanChallengeData->is_decoupled_tan_mode;
+            ];
+            
+            $response = $client->request('POST', 'webhookUrl', [
+                'body' => $payload
+            ]);
+
+            // Überprüfen, ob der Request erfolgreich war
+            if ($response->getStatusCode() === 200) {
+                return Step::STEP3_CHOOSE_ACCOUNT;
+            } else {
+                return Step::STEP2_LOGIN;
+            }
+        } else {
+            $login_handler->pose_and_render_tan_challenge();
+        }
     } else {
         if ($automate_without_js)
         {

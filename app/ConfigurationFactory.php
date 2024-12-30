@@ -10,6 +10,7 @@ class Configuration {
     public $bank_code;
     public $bank_2fa;
     public $bank_2fa_device;
+    public $bank_2fa_notification_webhook;
     public $firefly_url;
     public $firefly_access_token;
     public $skip_transaction_review;
@@ -29,15 +30,16 @@ class ConfigurationFactory
         $contentArray = json_decode($jsonFileContent, true);
 
         $configuration = new Configuration();
-        $configuration->bank_username           = $contentArray["bank_username"];
-        $configuration->bank_password           = $contentArray["bank_password"];
-        $configuration->bank_url                = $contentArray["bank_url"];
-        $configuration->bank_code               = $contentArray["bank_code"];
-        $configuration->bank_2fa                = $contentArray["bank_2fa"];
-        $configuration->bank_2fa_device         = @$contentArray["bank_2fa_device"];
-        $configuration->firefly_url             = $contentArray["firefly_url"];
-        $configuration->firefly_access_token    = $contentArray["firefly_access_token"];
-        $configuration->skip_transaction_review = filter_var($contentArray["skip_transaction_review"], FILTER_VALIDATE_BOOLEAN);
+        $configuration->bank_username                   = $contentArray["bank_username"];
+        $configuration->bank_password                   = $contentArray["bank_password"];
+        $configuration->bank_url                        = $contentArray["bank_url"];
+        $configuration->bank_code                       = $contentArray["bank_code"];
+        $configuration->bank_2fa                        = $contentArray["bank_2fa"];
+        $configuration->bank_2fa_device                 = @$contentArray["bank_2fa_device"];
+        $configuration->bank_2fa_notification_webhook   = @$contentArray["bank_2fa_notification_webhook"];
+        $configuration->firefly_url                     = $contentArray["firefly_url"];
+        $configuration->firefly_access_token            = $contentArray["firefly_access_token"];
+        $configuration->skip_transaction_review         = filter_var($contentArray["skip_transaction_review"], FILTER_VALIDATE_BOOLEAN);
         if (isset($contentArray["choose_account_automation"])) {
             $configuration->bank_account_iban       = $contentArray["choose_account_automation"]["bank_account_iban"];
             $configuration->firefly_account_id      = $contentArray["choose_account_automation"]["firefly_account_id"];
