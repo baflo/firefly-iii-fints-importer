@@ -6,8 +6,7 @@ COPY . /app/
 
 RUN rm -f /data/configurations/*
 
-RUN composer install --no-dev
-RUN composer clearcache
+RUN cd /app && composer install --no-dev && composer clearcache
 
 EXPOSE 8080
 
