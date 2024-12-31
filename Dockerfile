@@ -1,6 +1,6 @@
 FROM php:8.3-fpm-alpine
 
-WORKDIR /app
+WORKDIR .
 RUN apk add composer git
 
 COPY . .
