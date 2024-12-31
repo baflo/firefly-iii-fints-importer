@@ -2,7 +2,7 @@ FROM php:8.3-fpm-alpine
 
 RUN apk add composer git
 
-COPY . .
+COPY . /app/
 
 RUN rm -f /data/configurations/*
 
