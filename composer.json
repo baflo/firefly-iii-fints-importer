@@ -1,4 +1,9 @@
 {
+  "config": {
+    "platform": {
+      "php": "8.3.0"
+    }
+  },
   "require": {
     "nemiah/php-fints": "dev-master",
     "twig/twig": "^3.0",
