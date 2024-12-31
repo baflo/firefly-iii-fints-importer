@@ -1,12 +1,13 @@
 FROM php:8.3-fpm-alpine
 
+WORKDIR /app
 RUN apk add composer git
 
-COPY . /app/
+COPY . .
 
 RUN rm -f /data/configurations/*
 
-RUN cd /app && composer install --no-dev && composer clearcache
+RUN composer install --no-dev && composer clearcache
 
 EXPOSE 8080
 
