@@ -38,7 +38,7 @@ function Login()
             $tanChallengeData = $login_handler->pose_and_render_tan_challenge_automated();
 
             $client = HttpClient::create();// Session-ID aus dem Request extrahieren
-            $sessionId = $request->getSession()->getId();
+            $sessionId = $session->getId();
     
             // Webhook-URL des Partners
             $webhookUrl = $session->get("bank_2fa_notification_webhook");
